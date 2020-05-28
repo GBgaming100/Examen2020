@@ -9,14 +9,14 @@ body {
     /*justify-content: center;    /*height: 100vh;*/
     /*display: flex;*/
     /*justify-content: center;*/
-    background: #d63f1b;
+    background: #347aa4;
     font-family: 'Montserrat', sans-serif;
     color: white;
 }
 
 .bg-image {
 
-    background-image: url("https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+    background-image: url("https://images.pexels.com/photos/261327/pexels-photo-261327.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
 
     filter: blur(8px);
 
