@@ -1,20 +1,35 @@
-#include <dht.h>
+#include <DHT.h>
+#include <DHT_U.h>
+
+#define DHTPIN A0     
+#define DHTTYPE DHT11  
+DHT dht(DHTPIN, DHTTYPE);
+
 #include <SimpleTimer.h>
+
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x3F,20,4);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 //timer object
 SimpleTimer timer;
 
-dht DHT;
-
-#define DHT11_PIN 7
 int ledPin = 6; 
 
 
 void setup(){
   Serial.begin(9600);
   pinMode(ledPin, OUTPUT);
+    // Print a message to the LCD.
+  lcd.backlight();
+  lcd.init();                      // initialize the lcd 
+  
+  dht.begin();  
   
   timer.setInterval(10000, TimerTest);
+
+  
 }
 
 void loop()
@@ -25,21 +40,27 @@ void loop()
 
 void TimerTest()
 {
-
   //checkt de data van de sensor en zet deze in de serial monitor
   //dit doet hij elke 10 seconden door de timer die ik heb ingesteld. 
+ 
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
   
-  int chk = DHT.read11(DHT11_PIN);  
-  Serial.print("Temperature = ");
-  Serial.println(DHT.temperature);
-  Serial.print("Humidity = ");
-  Serial.println(DHT.humidity);
+  float hic = dht.computeHeatIndex(t, h, false);
+  
+  lcd.setCursor(0,0);
+  lcd.print("Temperatuur");
+  lcd.setCursor(12,0);
+  lcd.print(DHT.hic);
 
-  //ledje gaat elke 10 seconden aan en na 10 seconden weer uit
-  //dit is voor visualisatie zodat ik kan zien of de timer werkt
+  lcd.setCursor(0,1);
+  lcd.print("Humidity"); 
+  lcd.setCursor(12,1);
+  lcd.print(DHT.h);
+
   if(digitalRead(ledPin) == HIGH){
-  digitalWrite(ledPin, LOW);
+    digitalWrite(ledPin, LOW);
   } else{
-  digitalWrite(ledPin, HIGH);
+    digitalWrite(ledPin, HIGH);
   }
 }
