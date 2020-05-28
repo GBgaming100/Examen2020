@@ -1,6 +1,26 @@
 <?php
 include "inc/db.php";
 
+//haal alle data uit de luchttemp database
+//sorteert hem meteen op het laatste inkomende data zodat de meest recente temperatuur op het scherm komt
+$luchtTemp = "SELECT * FROM `luchttemp` ORDER BY `luchttemp`.`event` DESC";
+
+//database functie voor query te runnen
+$luchtTemp = connectDB($luchtTemp);
+
+//results komen in een array vorm hij verwijdert een stap in de array
+$luchtTemp = $luchtTemp[0];
+
+//haal alle data uit de watertemp database
+//sorteert hem meteen op het laatste inkomende data zodat de meest recente temperatuur op het scherm komt
+$waterTemp = "SELECT * FROM `watertemp` ORDER BY `watertemp`.`event` DESC";
+
+//database functie voor query te runnen
+$waterTemp = connectDB($waterTemp);
+
+//results komen in een array vorm hij verwijdert een stap in de array
+$waterTemp = $waterTemp[0];
+
 ?>
 <html>
 <head>
@@ -31,6 +51,9 @@ include "inc/db.php";
 </head>
 <body>
 <div class="bg-image"></div>
+<div class="topleft">
+    <p><a href="www.amxdev.nl"><img src="http://paaspop.amxdev.nl/img/AMXlogo.png" style="height: 125px"></a> </p>
+</div>
 <div class="container">
     <div class="row">
         <div class="main-content">
@@ -38,7 +61,12 @@ include "inc/db.php";
                 <h1></h1>
             </div>
             <div class="col-lg-12 col-sm12 text-center">
-                <h2>Kratjes</h2>
+                <h2><?= $waterTemp['waterTemperature'] ?> &#176;</h2>
+                <h3>Water temperatuur</h3>
+            </div>
+            <div class="col-lg-12 col-sm12 text-center">
+                <h2><?= $luchtTemp['buitenTemperature']?> &#176;</h2>
+                <h3>Lucht temperatuur</h3>
             </div>
         </div>
     </div>

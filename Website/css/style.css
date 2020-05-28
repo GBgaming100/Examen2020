@@ -68,7 +68,7 @@ h1 {
 }
 
 h2 {
-    font-size: 250px;
+    font-size: 195px;
     font-weight: 900;
     text-align: center;
     color: white;
@@ -277,4 +277,10 @@ and (orientation: portrait) {
 
 .accordion-item {
     background-color: white;
+}
+
+.topleft{
+    position: absolute;
+    top: 0;
+    left: 16px;
 }
