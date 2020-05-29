@@ -1,6 +1,7 @@
 #include <DHT.h>
 #include <DHT_U.h>
-
+//library for ethernet
+#include <Ethernet.h>
 //libraries for water temperature
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -26,6 +27,7 @@ DallasTemperature sensors(&oneWire);
 
 int photocellPin = 0;  // Analog input pin on Arduino we connected the SIG pin from sensor
 int photocellReading;  // Here we will place our reading
+int temperatureRound;
 
 LiquidCrystal_I2C lcd(0x3F, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
 
@@ -33,6 +35,18 @@ LiquidCrystal_I2C lcd(0x3F, 20, 4); // set the LCD address to 0x27 for a 16 char
 SimpleTimer timer;
 
 int ledPin = 6;
+
+byte mac[] = {
+  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
+};
+
+// Enter the IP address for Arduino, as mentioned we will use 192.168.0.16
+// Be careful to use , insetead of . when you enter the address here
+IPAddress ip(192, 168, 0, 40);
+
+char server[] = "192.168.0.39"; // IMPORTANT: If you are using XAMPP you will have to find out the IP address of your computer and put it here (it is explained in previous article). If you have a web page, enter its address (ie. "www.yourwebpage.com")
+
+EthernetClient client;
 
 
 void setup() {
@@ -59,9 +73,13 @@ void initGlobals()
 
   dht.begin();
 
-  timer.setInterval(4000, TimerTest);
+  timer.setInterval(30000, TimerTest);
 
   sensors.begin();
+
+  // start the Ethernet connection
+  Ethernet.begin(mac, ip);
+
 
   Serial.println("Finished");
 }
@@ -105,6 +123,8 @@ void TimerTest()
   meetLuchtTemp();
   meetWaterTemp();
 
+  sendDataToDB();
+
   if (digitalRead(ledPin) == HIGH) {
     digitalWrite(ledPin, LOW);
   } else {
@@ -122,7 +142,7 @@ void meetLuchtTemp()
 
   float hic = dht.computeHeatIndex(t, h, false);
 
-  int temperatureRound = (hic);
+  temperatureRound = (hic);
   // laat lucht temperatuur zien op display
   lcd.setCursor(14, 1);
   lcd.print(temperatureRound);
@@ -138,4 +158,27 @@ void meetWaterTemp()
   //laat water tempratuur zien op display
   lcd.setCursor(14, 2);
   lcd.print(photocellReading);
+}
+
+void sendDataToDB()
+{
+  // Connect to the server (your computer or web page)
+  if (client.connect(server, 80)) {
+    client.print("GET /website/sendDataToDB.php?"); // This
+    client.print("waterTemp="); // This
+    client.print(photocellReading); // And this is what we did in the testing section above. We are making a GET request just like we would from our browser but now with live data from the sensor
+    client.print("&airTemp="); // This
+    client.print(temperatureRound); // And this is what we did in the testing section above. We are making a GET request just like we would from our browser but now with live data from the sensor
+    client.println(" HTTP/1.1"); // Part of the GET request
+    client.println("Host: 192.168.0.39"); // IMPORTANT: If you are using XAMPP you will have to find out the IP address of your computer and put it here (it is explained in previous article). If you have a web page, enter its address (ie.Host: "www.yourwebpage.com")
+    client.println("Connection: close"); // Part of the GET request telling the server that we are over transmitting the message
+    client.println(); // Empty line
+    client.println(); // Empty line
+    client.stop();    // Closing connection to server
+  }
+  else {
+    // If Arduino can't connect to the server (your computer or web page)
+    Serial.println("--> connection failed\n");
+  }
+
 }
