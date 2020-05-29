@@ -49,14 +49,14 @@ void TimerTest()
   float hic = dht.computeHeatIndex(t, h, false);
   
   lcd.setCursor(0,0);
-  lcd.print("Temperatuur");
+  lcd.print("Temperatuur:");
   lcd.setCursor(12,0);
-  lcd.print(DHT.hic);
+  lcd.print(hic);
 
   lcd.setCursor(0,1);
-  lcd.print("Humidity"); 
+  lcd.print("Humidity:"); 
   lcd.setCursor(12,1);
-  lcd.print(DHT.h);
+  lcd.print(h);
 
   if(digitalRead(ledPin) == HIGH){
     digitalWrite(ledPin, LOW);
