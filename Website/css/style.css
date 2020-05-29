@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500, 600,800&display=swap');
+
+@import url('https://fonts.googleapis.com/css?family=Hind:300,400');
+
+body {
+    margin: 0;
+    /*height: 100vh;*/
+    /*display: flex;*/
+    /*justify-content: center;    /*height: 100vh;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    background: #347aa4;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+}
+
+.bg-image {
+
+    background-image: url("https://images.pexels.com/photos/261327/pexels-photo-261327.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+
+    filter: blur(8px);
+
+    height: 100%;
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h3 {
+    color: white;
+    font-size: 80px;
+    font-weight: 900;
+}
+
+h4 {
+    color: white;
+    font-size: 65px;
+    font-weight: 900;
+}
+
+span {
+    color: #04286f;
+    font-weight: 900;
+}
+
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    /*background:*/
+    /*        url('https://images.pexels.com/photos/338711/pexels-photo-338711.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260')*/
+    /*        no-repeat center center;*/
+}
+
+.main-content {
+    width: 100%
+}
+
+h1 {
+    font-size: 340px;
+    font-weight: 900;
+    text-align: center;
+    color: white;
+    /*margin-top: 120px;*/
+}
+
+h2 {
+    font-size: 195px;
+    font-weight: 900;
+    text-align: center;
+    color: white;
+}
+
+.button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.form-group label {
+    /*color: black;*/
+}
+
+.modal-title {
+    /*    color: black;*/
+}
+
+.stats {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media only screen
+and (min-device-width: 350px)
+and (max-device-width: 780px)
+and (orientation: portrait) {
+    .stats {
+        max-width: 720px;
+    }
+
+    .main-content {
+        margin-top: 50%;
+        width: 100%;
+
+    }
+
+    body {
+        color: black;
+    }
+
+    h1 {
+        font-size: 240px;
+    }
+
+    h2 {
+        font-size: 150px;
+    }
+
+
+    h3 {
+        color: white;
+        font-size: 70px;
+        font-weight: 900;
+    }
+
+    h4 {
+        color: white;
+        font-size: 55px;
+        font-weight: 900;
+    }
+
+    span {
+        color: #04286f;
+        font-weight: 900;
+    }
+
+    .container {
+
+    }
+
+    .map {
+        height: 30rem;
+    }
+
+    .faq {
+
+        max-width: 75%;
+    }
+
+    .faq h3 {
+        font-size: 3.25rem;
+
+    }
+
+    .faq h2 {
+        font-size: 3em;
+    }
+
+    .accordion .content p {
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: #04286f;
+    }
+}
+
+.h1-add h1 {
+    font-size: 150px !important;
+}
+
+.fa-arrow-circle-up:hover {
+    color: #8a8a8a;
+}
+
+.fa-arrow-circle-down:hover {
+    color: #8a8a8a;
+}
+
+.faq {
+    margin-top: 100px !important;
+    font-family: 'Hind', sans-serif;
+    margin: 0 auto;
+    padding: 4rem;
+    width: 88rem;
+    background-color: #f1f1f1;
+}
+
+.faq h3 {
+    font-size: 1.75rem;
+    color: #04286f;
+    padding: 1.3rem;
+    margin: 0;
+
+}
+
+
+.faq h2 {
+    color: #04286f;
+    display: block;
+    font-size: 1.5em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+.accordion a {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 3rem 1rem 1rem;
+    color: #7288a2;
+    font-size: 1.15rem;
+    font-weight: 400;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.accordion a:hover,
+.accordion a:hover::after {
+    cursor: pointer;
+    color: #03b5d2;
+}
+
+.accordion a:hover::after {
+    border: 1px solid #03b5d2;
+}
+
+.accordion a.active {
+    color: #03b5d2;
+    border-bottom: 1px solid #03b5d2;
+}
+
+.accordion .content {
+    opacity: 0;
+    padding: 0 1rem;
+    max-height: 0;
+    border-bottom: 1px solid #e5e5e5;
+    overflow: hidden;
+    clear: both;
+    -webkit-transition: all 0.2s ease 0.15s;
+    -o-transition: all 0.2s ease 0.15s;
+    transition: all 0.2s ease 0.15s;
+}
+
+.accordion .content p {
+    font-size: 1rem;
+    font-weight: 300;
+    color: #04286f;
+}
+
+.accordion .content.active {
+    opacity: 1;
+    padding: 1rem;
+    max-height: 100%;
+    -webkit-transition: all 0.35s ease 0.15s;
+    -o-transition: all 0.35s ease 0.15s;
+    transition: all 0.35s ease 0.15s;
+}
+
+.faq-section {
+    height: 80%;
+}
+
+.accordion-item {
+    background-color: white;
+}
+
+.topleft{
+    position: absolute;
+    top: 0;
+    left: 16px;
+}
