@@ -2,7 +2,7 @@
 
 function connectDB($sql)
 {
-    $connect = mysqli_connect("localhost","root","", "arduinotempature"); //localhosts
+    $connect = mysqli_connect("localhost","root","", "arduinotemperature"); //localhosts
 
     $resource = mysqli_query($connect, $sql);
     $retuning_array = array();

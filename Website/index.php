@@ -73,10 +73,8 @@ $waterTemp = $waterTemp[0];
 </div>
 
 <section class="switch">
-    <div class="btn btn-primary js_switch">
         <h4 class="js_C"> C&#176;</h4>
         <h4 class="js_F d-none"> F&#176;</h4>
-    </div>
 </section>
 </body>
 </html>
