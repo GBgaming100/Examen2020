@@ -1,34 +1,19 @@
-$( document ).ready(function() {
-    $( ".js_C" ).click(function() {
-        $( ".js_C" ).addClass( "d-none" );
-        $( ".js_F" ).removeClass( "d-none" );
+    $(document).ready(function () {
 
-        var schaal = "F";
-        $.ajax({
-            url : "inc/switchSchaal.php",
-            type: "POST",
-            data : {schaal:schaal},
-            success: function(data)
-            {
-                console.log(data);
-            }
-        });
 
+        setInterval(function () {
+            $.getJSON("inc/getData.php", function (data, status) {
+
+                $(".js_waterTemp").html(data['waterTemp']);
+                $(".js_luchtTemp").html(data['luchtTemp']);
+
+                if (data['schaal'] == 0){
+                    $(".js_schaal").html("C&#176;");
+                    console.log("celcius");
+                } else{
+                    $(".js_schaal").html("F&#176;");
+                    console.log("fahrenheit");
+                }
+            });
+        }, 3000);
     });
-
-    $( ".js_F" ).click(function() {
-        $( ".js_F" ).addClass( "d-none" );
-        $( ".js_C" ).removeClass( "d-none" );
-
-        var schaal = "C";
-        $.ajax({
-            url : "inc/switchSchaal.php",
-            type: "POST",
-            data : {schaal:schaal},
-            success: function(data)
-            {
-                console.log(data);
-            }
-        });
-    });
-});

@@ -42,6 +42,8 @@ int waterTempActive = true;
 int luchtTempActive = true;
 int networkActive = true;
 
+bool schaalSwitch = false; //true is fahrenheit en false is celcius
+
 byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
 };
@@ -124,19 +126,10 @@ void lcdSetup()
 
 void TimerTest()
 {
-
   meetLuchtTemp();
   meetWaterTemp();
-
   sendDataToDB();
-
   ledStatus();
-
-  //  if (digitalRead(LedPinG) == HIGH) {
-  //    digitalWrite(LedPinG, LOW);
-  //  } else {
-  //    digitalWrite(LedPinG, HIGH);
-  //  }
 }
 
 void meetLuchtTemp()
@@ -150,15 +143,25 @@ void meetLuchtTemp()
   float hic = dht.computeHeatIndex(t, h, false);
 
   if (hic > 0 && hic < 51) {
-    temperatureRound = (hic);
+    if ( schaalSwitch == false) {
+      temperatureRound = (hic);
 
-    // laat lucht temperatuur zien op display
-    lcd.setCursor(14, 1);
-    lcd.print(temperatureRound);
+      // laat lucht temperatuur zien op display
+      lcd.setCursor(14, 1);
+      lcd.print(temperatureRound);
 
-    lcd.setCursor(16, 1);
-    lcd.print("C   ");
+      lcd.setCursor(16, 1);
+      lcd.print("C   ");
+    } else {
+      temperatureRound = 1.8 * (hic) + 32;
+      temperatureRound = (temperatureRound);
+      // laat lucht temperatuur zien op display
+      lcd.setCursor(14, 1);
+      lcd.print(temperatureRound);
 
+      lcd.setCursor(16, 1);
+      lcd.print("F   ");
+    }
     luchtTempActive = true;
   } else {
     luchtTempActive = false;
@@ -172,17 +175,20 @@ void meetWaterTemp()
   sensors.requestTemperatures(); // Send the command to get temperatures
   waterTemp = sensors.getTempCByIndex(0);
 
-  //laat water tempratuur zien op display
-  lcd.setCursor(14, 2);
-  lcd.print(waterTemp);
-
-
   if (waterTemp > -55 && waterTemp < 125) {
-    //laat water tempratuur zien op display
-    lcd.setCursor(14, 2);
-    lcd.print(waterTemp);
-    lcd.setCursor(16, 2);
-    lcd.print("C   ");
+    if ( schaalSwitch == false) {
+      //laat water tempratuur zien op display
+      lcd.setCursor(14, 2);
+      lcd.print(waterTemp);
+      lcd.setCursor(16, 2);
+      lcd.print("C   ");
+    } else {
+      waterTemp = 1.8 * waterTemp + 32;
+      lcd.setCursor(14, 2);
+      lcd.print(waterTemp);
+      lcd.setCursor(16, 2);
+      lcd.print("F   ");
+    }
     waterTempActive = true;
   } else if (waterTemp == -127) {
 
@@ -195,34 +201,6 @@ void meetWaterTemp()
 
 void sendDataToDB()
 {
-  // Connect to the server (your computer or web page)
-  //  if (client.connect(server, 80)) {
-  //    client.print("GET /sendDataToDB.php?"); // This
-  //    client.print("waterTemp="); // This
-  //    client.print(waterTemp); // And this is what we did in the testing section above. We are making a GET request just like we would from our browser but now with live data from the sensor
-  //    client.print("&airTemp="); // This
-  //    client.print(temperatureRound); // And this is what we did in the testing section above. We are making a GET request just like we would from our browser but now with live data from the sensor
-  //    client.println(" HTTP/1.1"); // Part of the GET request
-  //    client.println("Host: www.amxdev.nl/"); // IMPORTANT: If you are using XAMPP you will have to find out the IP address of your computer and put it here (it is explained in previous article). If you have a web page, enter its address (ie.Host: "www.yourwebpage.com")
-  //    client.println("Connection: close"); // Part of the GET request telling the server that we are over transmitting the message
-  //    client.println(); // Empty line
-  //    client.println(); // Empty line
-  //    client.stop();    // Closing connection to server
-  //
-  //    networkActive = true;
-  //    lcd.setCursor(0, 3);
-  //    lcd.print("             ");
-  //  }
-  //  else {
-  //    // If Arduino can't connect to the server (your computer or web page)
-  //    ("--> connection failed\n");
-  //
-  //    networkActive = false;
-  //
-  //    lcd.setCursor(0, 3);
-  //    lcd.print("Network Error");
-  //  }
-
   // start the Ethernet connection:
   Serial.println("Initialize Ethernet with DHCP:");
   if (Ethernet.begin(mac) == 0) {
@@ -230,12 +208,15 @@ void sendDataToDB()
     // Check for Ethernet hardware present
     if (Ethernet.hardwareStatus() == EthernetNoHardware) {
       Serial.println("Ethernet shield was not found.  Sorry, can't run without hardware. :(");
-      while (true) {
-        delay(1); // do nothing, no point running without Ethernet hardware
-      }
+      lcd.setCursor(0, 3);
+      lcd.print("Shield Error");
+      networkActive = false;
     }
     if (Ethernet.linkStatus() == LinkOFF) {
       Serial.println("Ethernet cable is not connected.");
+      lcd.setCursor(0, 3);
+      lcd.print("Ethernet cable Error");
+      networkActive = false;
     }
     // try to congifure using IP address instead of DHCP:
     //    Ethernet.begin(mac, ip, myDns);
@@ -254,20 +235,27 @@ void sendDataToDB()
   if (client.connect(server, 80)) {
     Serial.print("connected to ");
     Serial.println(client.remoteIP());
+    lcd.setCursor(0, 3);
+    lcd.print("Network Ok");
+    networkActive = true;
     // Make a HTTP request:
     client.print("GET /sendDataToDB.php?"); // This
     client.print("waterTemp="); // This
     client.print(waterTemp); // And this is what we did in the testing section above. We are making a GET request just like we would from our browser but now with live data from the sensor
     client.print("&airTemp="); // This
     client.print(temperatureRound);
+    client.print("&schaalSwitch="); // This
+    client.print(schaalSwitch);
     client.println(" HTTP/1.1"); // Part of the GET request
-
     client.println("Host: www.amxdev.nl");
     client.println("Connection: close");
     client.println();
   } else {
     // if you didn't get a connection to the server:
     Serial.println("connection failed");
+    lcd.setCursor(0, 3);
+    lcd.print("Con, failed");
+    networkActive = false;
   }
 }
 

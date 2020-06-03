@@ -9,7 +9,7 @@ $luchtTemp = "SELECT * FROM `luchttemp` ORDER BY `luchttemp`.`event` DESC";
 $luchtTemp = connectDB($luchtTemp);
 
 //results komen in een array vorm hij verwijdert een stap in de array
-$luchtTemp = $luchtTemp[0];
+$luchtTemp = $luchtTemp[0]['buitenTemperature'];
 
 //haal alle data uit de watertemp database
 //sorteert hem meteen op het laatste inkomende data zodat de meest recente temperatuur op het scherm komt
@@ -19,8 +19,7 @@ $waterTemp = "SELECT * FROM `watertemp` ORDER BY `watertemp`.`event` DESC";
 $waterTemp = connectDB($waterTemp);
 
 //results komen in een array vorm hij verwijdert een stap in de array
-$waterTemp = $waterTemp[0];
-
+$waterTemp = $waterTemp[0]['waterTemperature'];
 ?>
 <html>
 <head>
@@ -61,11 +60,11 @@ $waterTemp = $waterTemp[0];
                 <h1></h1>
             </div>
             <div class="col-lg-12 col-sm12 text-center">
-                <h2><?= $waterTemp['waterTemperature'] ?>&#176;</h2>
+                <h2 class=""><span class="js_waterTemp"><?= $waterTemp ?></span>&#176;</h2>
                 <h3>Water temperatuur</h3>
             </div>
             <div class="col-lg-12 col-sm12 text-center">
-                <h2><?= $luchtTemp['buitenTemperature'] ?>&#176;</h2>
+                <h2 class=""><span class="js_luchtTemp"><?= $luchtTemp ?></span>&#176;</h2>
                 <h3>Lucht temperatuur</h3>
             </div>
         </div>
@@ -73,8 +72,7 @@ $waterTemp = $waterTemp[0];
 </div>
 
 <section class="switch">
-        <h4 class="js_C"> C&#176;</h4>
-        <h4 class="js_F d-none"> F&#176;</h4>
+        <h4><span class="js_schaal"></span></h4>
 </section>
 </body>
 </html>
