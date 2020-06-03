@@ -26,7 +26,7 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
 int photocellPin = 0;  // Analog input pin on Arduino we connected the SIG pin from sensor
-int photocellReading;  // Here we will place our reading
+int waterTemp;  // Here we will place our reading
 int temperatureRound;
 
 LiquidCrystal_I2C lcd(0x3F, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
@@ -34,7 +34,13 @@ LiquidCrystal_I2C lcd(0x3F, 20, 4); // set the LCD address to 0x27 for a 16 char
 //timer object
 SimpleTimer timer;
 
-int ledPin = 6;
+int LedPinR = 6;
+int LedPinG = 5;
+int LedPinB = 3;
+
+int waterTempActive = true;
+int luchtTempActive = true;
+int networkActive = true;
 
 byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
@@ -66,14 +72,18 @@ void initGlobals()
 {
   Serial.println("Init Globals...");
 
-  pinMode(ledPin, OUTPUT);
+  pinMode(LedPinG, OUTPUT);
+  pinMode(LedPinB, OUTPUT);
+  pinMode(LedPinR, OUTPUT);
+
+  ledStatus();
 
   lcd.backlight();
   lcd.init();
 
   dht.begin();
 
-  timer.setInterval(30000, TimerTest);
+  timer.setInterval(5000, TimerTest);
 
   sensors.begin();
 
@@ -102,17 +112,12 @@ void lcdSetup()
   lcd.setCursor(0, 0);
   lcd.print("Temperatuur");
 
-  lcd.setCursor(0, 1);
+  lcd.setCursor(0, 2);
   lcd.print("Het water is:");
 
-  lcd.setCursor(16, 1);
-  lcd.print("C");
-
-  lcd.setCursor(0, 2);
+  lcd.setCursor(0, 1);
   lcd.print("De lucht is:");
 
-  lcd.setCursor(16, 2);
-  lcd.print("C");
   Serial.println("Finished");
 }
 
@@ -125,11 +130,13 @@ void TimerTest()
 
   sendDataToDB();
 
-  if (digitalRead(ledPin) == HIGH) {
-    digitalWrite(ledPin, LOW);
-  } else {
-    digitalWrite(ledPin, HIGH);
-  }
+  ledStatus();
+
+  //  if (digitalRead(LedPinG) == HIGH) {
+  //    digitalWrite(LedPinG, LOW);
+  //  } else {
+  //    digitalWrite(LedPinG, HIGH);
+  //  }
 }
 
 void meetLuchtTemp()
@@ -142,22 +149,48 @@ void meetLuchtTemp()
 
   float hic = dht.computeHeatIndex(t, h, false);
 
-  temperatureRound = (hic);
-  // laat lucht temperatuur zien op display
-  lcd.setCursor(14, 1);
-  lcd.print(temperatureRound);
+  if (hic > 0 && hic < 51) {
+    temperatureRound = (hic);
 
+    // laat lucht temperatuur zien op display
+    lcd.setCursor(14, 1);
+    lcd.print(temperatureRound);
 
+    lcd.setCursor(16, 1);
+    lcd.print("C   ");
+
+    luchtTempActive = true;
+  } else {
+    luchtTempActive = false;
+    lcd.setCursor(14, 1);
+    lcd.print("Error");
+  }
 }
 
 void meetWaterTemp()
 {
   sensors.requestTemperatures(); // Send the command to get temperatures
-  photocellReading = sensors.getTempCByIndex(0);
+  waterTemp = sensors.getTempCByIndex(0);
 
   //laat water tempratuur zien op display
   lcd.setCursor(14, 2);
-  lcd.print(photocellReading);
+  lcd.print(waterTemp);
+
+
+  if (waterTemp > -55 && waterTemp < 125) {
+    //laat water tempratuur zien op display
+    lcd.setCursor(14, 2);
+    lcd.print(waterTemp);
+    lcd.setCursor(16, 2);
+    lcd.print("C   ");
+    waterTempActive = true;
+  } else if (waterTemp == -127) {
+
+    waterTempActive = false;
+
+    lcd.setCursor(14, 2);
+    lcd.print("Error");
+  }
 }
 
 void sendDataToDB()
@@ -166,7 +199,7 @@ void sendDataToDB()
   if (client.connect(server, 80)) {
     client.print("GET /website/sendDataToDB.php?"); // This
     client.print("waterTemp="); // This
-    client.print(photocellReading); // And this is what we did in the testing section above. We are making a GET request just like we would from our browser but now with live data from the sensor
+    client.print(waterTemp); // And this is what we did in the testing section above. We are making a GET request just like we would from our browser but now with live data from the sensor
     client.print("&airTemp="); // This
     client.print(temperatureRound); // And this is what we did in the testing section above. We are making a GET request just like we would from our browser but now with live data from the sensor
     client.println(" HTTP/1.1"); // Part of the GET request
@@ -175,10 +208,55 @@ void sendDataToDB()
     client.println(); // Empty line
     client.println(); // Empty line
     client.stop();    // Closing connection to server
+
+    networkActive = true;
+    lcd.setCursor(0, 3);
+    lcd.print("             ");
   }
   else {
     // If Arduino can't connect to the server (your computer or web page)
-    Serial.println("--> connection failed\n");
+    ("--> connection failed\n");
+
+    networkActive = false;
+
+    lcd.setCursor(0, 3);
+    lcd.print("Network Error");
+  }
+}
+
+void ledStatus()
+{
+
+  String ledStatus;
+
+  if ( waterTempActive == true && luchtTempActive == true &&  networkActive == true)
+  {
+    ledStatus = "groen";
+  } else if ( waterTempActive == false || luchtTempActive == false ||  networkActive == false)
+  {
+    ledStatus = "oranje";
+  }
+  if ( waterTempActive == false && luchtTempActive == false &&  networkActive == false)
+  {
+    ledStatus = "rood";
   }
 
+  if (ledStatus == "rood")
+  {
+    analogWrite(LedPinR, 255);
+    analogWrite(LedPinG, 0);
+    analogWrite(LedPinB, 0);
+  }
+  else if ( ledStatus == "groen")
+  {
+    analogWrite(LedPinR, 0);
+    analogWrite(LedPinG, 255);
+    analogWrite(LedPinB, 0);
+  }
+  else if (ledStatus == "oranje")
+  {
+    analogWrite(LedPinR, 255);
+    analogWrite(LedPinG, 127);
+    analogWrite(LedPinB, 0);
+  }
 }

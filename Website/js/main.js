@@ -1,55 +1,34 @@
 $( document ).ready(function() {
-    $( ".inloggen" ).click(function() {
-        var userName = $("#userName")[0].value;
-        var password = $("#wachtwoord")[0].value;
+    $( ".js_C" ).click(function() {
+        $( ".js_C" ).addClass( "d-none" );
+        $( ".js_F" ).removeClass( "d-none" );
 
+        var schaal = "F";
         $.ajax({
-            url : "inc/login.php",
+            url : "inc/switchSchaal.php",
             type: "POST",
-            data : {username:userName,pass:password},
-            success: function(data, textStatus, jqXHR)
+            data : {schaal:schaal},
+            success: function(data)
             {
-                console.log(data)
+                console.log(data);
+            }
+        });
+
+    });
+
+    $( ".js_F" ).click(function() {
+        $( ".js_F" ).addClass( "d-none" );
+        $( ".js_C" ).removeClass( "d-none" );
+
+        var schaal = "C";
+        $.ajax({
+            url : "inc/switchSchaal.php",
+            type: "POST",
+            data : {schaal:schaal},
+            success: function(data)
+            {
+                console.log(data);
             }
         });
     });
-
-    $( ".js-addKratje" ).click(function() {
-        var addOrRemove = true;
-        $.ajax({
-            url : "inc/addOrRemove.php",
-            type: "POST",
-            data : {addOrRemove:addOrRemove},
-            success: function(data, textStatus, jqXHR)
-            {
-                location.reload();
-                console.log(data)
-            }
-        });
-    });
-
-    $( ".js-removeKratje" ).click(function() {
-        var addOrRemove = false;
-        $.ajax({
-            url : "inc/addOrRemove.php",
-            type: "POST",
-            data : {addOrRemove:addOrRemove},
-            success: function(data, textStatus, jqXHR)
-            {
-                location.reload();
-                console.log(data)
-            }
-        });
-    });
-
-    const items = document.querySelectorAll(".accordion a");
-
-    function toggleAccordion(){
-        this.classList.toggle('active');
-        this.nextElementSibling.classList.toggle('active');
-    }
-
-    items.forEach(item => item.addEventListener('click', toggleAccordion));
 });
-
-

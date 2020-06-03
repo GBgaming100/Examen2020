@@ -72,6 +72,7 @@
       <workItem from="1590654310504" duration="185000" />
       <workItem from="1590654660737" duration="3089000" />
       <workItem from="1590743770663" duration="2154000" />
+      <workItem from="1591103813961" duration="1841000" />
     </task>
     <servers />
   </component>
@@ -87,15 +88,19 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="276" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1583406928174" />
-    <state x="635" y="369" key="NewPhpFileDialog" timestamp="1590743823056">
+    <state x="635" y="369" key="NewPhpFileDialog" timestamp="1591105028368">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="635" y="369" key="NewPhpFileDialog/0.0.1536.864@0.0.1536.864" timestamp="1590743823056" />
+    <state x="635" y="369" key="NewPhpFileDialog/0.0.1536.864@0.0.1536.864" timestamp="1591105028368" />
     <state x="794" y="444" key="NewPhpFileDialog/0.0.1920.1040/-1680.26.1680.1010@0.0.1920.1040" timestamp="1583756422328" />
-    <state x="477" y="253" key="com.intellij.ide.util.TipDialog" timestamp="1590743777763">
+    <state x="477" y="253" key="com.intellij.ide.util.TipDialog" timestamp="1591103813570">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="477" y="253" key="com.intellij.ide.util.TipDialog/0.0.1536.864@0.0.1536.864" timestamp="1590743777763" />
+    <state x="477" y="253" key="com.intellij.ide.util.TipDialog/0.0.1536.864@0.0.1536.864" timestamp="1591103813570" />
     <state x="596" y="304" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1583227008285" />
+    <state x="567" y="72" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1591104017843">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="567" y="72" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1536.864@0.0.1536.864" timestamp="1591104017843" />
   </component>
 </project>

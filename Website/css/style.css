@@ -284,3 +284,14 @@ and (orientation: portrait) {
     top: 0;
     left: 16px;
 }
+
+h4{
+    position: absolute;
+    top: 0;
+    right: 16px;
+    color: #fff;
+    background-color: #d73f1b;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 36px;
+}

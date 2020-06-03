@@ -52,7 +52,7 @@ $waterTemp = $waterTemp[0];
 <body>
 <div class="bg-image"></div>
 <div class="topleft">
-    <p><a href="www.amxdev.nl"><img src="http://paaspop.amxdev.nl/img/AMXlogo.png" style="height: 125px"></a> </p>
+    <p><a href="www.amxdev.nl"><img src="http://paaspop.amxdev.nl/img/AMXlogo.png" style="height: 125px"></a></p>
 </div>
 <div class="container">
     <div class="row">
@@ -61,15 +61,22 @@ $waterTemp = $waterTemp[0];
                 <h1></h1>
             </div>
             <div class="col-lg-12 col-sm12 text-center">
-                <h2><?= $waterTemp['waterTemperature'] ?> &#176;</h2>
+                <h2><?= $waterTemp['waterTemperature'] ?>&#176;</h2>
                 <h3>Water temperatuur</h3>
             </div>
             <div class="col-lg-12 col-sm12 text-center">
-                <h2><?= $luchtTemp['buitenTemperature']?> &#176;</h2>
+                <h2><?= $luchtTemp['buitenTemperature'] ?>&#176;</h2>
                 <h3>Lucht temperatuur</h3>
             </div>
         </div>
     </div>
 </div>
+
+<section class="switch">
+    <div class="btn btn-primary js_switch">
+        <h4 class="js_C"> C&#176;</h4>
+        <h4 class="js_F d-none"> F&#176;</h4>
+    </div>
+</section>
 </body>
 </html>
