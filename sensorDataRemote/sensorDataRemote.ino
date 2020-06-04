@@ -5,6 +5,7 @@
 //libraries for water temperature
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <EEPROM.h>
 
 #include <SimpleTimer.h>
 
@@ -38,11 +39,15 @@ int LedPinR = 6;
 int LedPinG = 5;
 int LedPinB = 3;
 
+//button test
+int ledSchaal = 7;               // GPIO 7 for the LED
+const int button = 8;            // GPIO 8 for the button
+
 int waterTempActive = true;
 int luchtTempActive = true;
 int networkActive = true;
 
-bool schaalSwitch = false; //true is fahrenheit en false is celcius
+bool schaalSwitch; //true is fahrenheit en false is celcius
 
 byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
@@ -59,10 +64,16 @@ EthernetClient client;
 
 void setup() {
   Serial.begin(9600);
+  digitalWrite(ledSchaal, HIGH);
   initGlobals();//initialis all globals variables
   lcdSetup();//shows lcd demo
   meetLuchtTemp();
   meetWaterTemp();
+
+
+
+  pinMode(button, INPUT);        // define button as an input
+  pinMode(ledSchaal, OUTPUT);          // define LED as an output
 }
 
 void loop()
@@ -91,7 +102,11 @@ void initGlobals()
 
   // start the Ethernet connection
   Ethernet.begin(mac, ip);
-
+  
+  int value = EEPROM.read(1);
+  Serial.print("EEPROM Value:");
+  Serial.println(value);
+  schaalSwitch = EEPROM.read(1);
 
   Serial.println("Finished");
 }
@@ -126,10 +141,13 @@ void lcdSetup()
 
 void TimerTest()
 {
+  ButtonPressed();
   meetLuchtTemp();
   meetWaterTemp();
   sendDataToDB();
   ledStatus();
+
+  Serial.println(schaalSwitch);
 }
 
 void meetLuchtTemp()
@@ -202,7 +220,7 @@ void meetWaterTemp()
 void sendDataToDB()
 {
   // start the Ethernet connection:
-  Serial.println("Initialize Ethernet with DHCP:");
+  //  Serial.println("Initialize Ethernet with DHCP:");
   if (Ethernet.begin(mac) == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
     // Check for Ethernet hardware present
@@ -221,20 +239,20 @@ void sendDataToDB()
     // try to congifure using IP address instead of DHCP:
     //    Ethernet.begin(mac, ip, myDns);
   } else {
-    Serial.print("  DHCP assigned IP ");
-    Serial.println(Ethernet.localIP());
+    //    Serial.print("  DHCP assigned IP ");
+    //    Serial.println(Ethernet.localIP());
   }
 
   // give the Ethernet shield a second to initialize:
   delay(1000);
-  Serial.print("connecting to ");
-  Serial.print(server);
-  Serial.println("...");
+  //  Serial.print("connecting to ");
+  //  Serial.print(server);
+  //  Serial.println("...");
 
   // if you get a connection, report back via serial:
   if (client.connect(server, 80)) {
-    Serial.print("connected to ");
-    Serial.println(client.remoteIP());
+    //    Serial.print("connected to ");
+    //    Serial.println(client.remoteIP());
     lcd.setCursor(0, 3);
     lcd.print("Network Ok");
     networkActive = true;
@@ -297,4 +315,30 @@ void ledStatus()
     analogWrite(LedPinG, 127);
     analogWrite(LedPinB, 0);
   }
+}
+
+void ButtonPressed() {
+
+  if (schaalSwitch == true) {
+    digitalWrite(ledSchaal, HIGH);
+
+  } else {
+    digitalWrite(ledSchaal, LOW);
+
+  }
+
+
+  if (digitalRead(button) == HIGH) { // if button is pressed
+    if (schaalSwitch == true) {           // and the status flag is LOW
+      schaalSwitch = false;                // make status flag HIGH
+      Serial.println("Writes 1 to EEPROm");
+      EEPROM.write(1, 0);
+    }                           //
+    else {                        // otherwise...
+      schaalSwitch = true;                // make status flag LOW
+      Serial.println("Writes 2 to EEPROm");
+      EEPROM.write(1, 1);
+    }
+    delay(1000);                    // wait a sec for the
+  }                               // hardware to stabilize
 }
