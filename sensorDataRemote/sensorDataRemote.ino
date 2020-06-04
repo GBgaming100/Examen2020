@@ -37,6 +37,7 @@
 int ledSchaal = 7; //pin out Led voor schaal
 int LedPinR = 6;   //RGB pin out Rood
 int LedPinG = 5;   //RGB pin out Groen
+int ledProgress = 4;   //RGB pin out Groen
 int LedPinB = 3;   //RGB pin out Blauw
 int button = 8; //button voor het wisselen van schaal input
 
@@ -45,6 +46,10 @@ bool waterTempActive = true;
 bool luchtTempActive = true;
 bool networkActive = true;
 bool schaalSwitch; //Variable voor het wisselen van Schaal true = fahrenheit, false = celcius
+bool  debugLogging;
+
+//variable voor Serial.read
+String serialInput;
 
 //<--- Begin Lucht Sensor --->
 #define DHTPIN A0 //pin out voor lucht sensor
@@ -89,6 +94,8 @@ void setup() {
 
   Serial.begin(9600);
 
+  Serial.println(schaalSwitch);
+
   initGlobals();//initialis alle globale variable
   lcdSetup();//laat een lcd demo zien
   meetLuchtTemp();
@@ -103,13 +110,12 @@ void loop()
 
 void initGlobals()
 {
-  Serial.println("Init Globals...");
-
   //pin input en outputs
   pinMode(LedPinG, OUTPUT);
   pinMode(LedPinB, OUTPUT);
   pinMode(LedPinR, OUTPUT);
   pinMode(ledSchaal, OUTPUT);
+  pinMode(ledProgress, OUTPUT);
   pinMode(button, INPUT);
 
   //lcd aanzetten en initialiseren
@@ -120,7 +126,7 @@ void initGlobals()
   dht.begin();
 
   //zet de timer op een interval van 5 seconden
-  timer.setInterval(5000, MainTimer);
+  timer.setInterval(2500, MainTimer);
 
   //begint de water temperatuur sensor
   sensors.begin();
@@ -129,15 +135,15 @@ void initGlobals()
   Ethernet.begin(mac, ip);
 
   //zet de schaalSwitch op de laats opgeslagen value van de EEPROM
-  schaalSwitch = EEPROM.read(1);
-
-  Serial.println("Init finished");
+  bool schaalSwitch = EEPROM.read(1);
+  if ( schaalSwitch = true) {
+    digitalWrite(ledSchaal, HIGH);
+  }
 }
 
 //functie voor een demo van het lcd scherm en de eerste initialisering
 void lcdSetup()
 {
-  Serial.println("Start lcd Demo");
   lcd.setCursor(0, 0);
   lcd.print("Temperatuur meter");
   lcd.setCursor(0, 1);
@@ -170,6 +176,16 @@ void MainTimer()
   meetWaterTemp();
   sendDataToDB();
   ledStatus();
+  DebugOn();
+  Serial.println(schaalSwitch);
+  schaalSwitch = EEPROM.read(1);
+  Serial.println(schaalSwitch);
+
+  if (digitalRead(ledProgress) == LOW) {
+    digitalWrite(ledProgress, HIGH);
+  } else {
+    digitalWrite(ledProgress, LOW);
+  }
 }
 
 //functie voor het meten en laten zien op de display van de lucht temperatuur
@@ -244,6 +260,7 @@ void meetWaterTemp()
     //als de sensor niet actief is laat hij op het display een Error messeage zien en gaat het rgb ledje op oranje
     waterTempActive = false;
 
+
     lcd.setCursor(14, 2);
     lcd.print("Error");
   }
@@ -275,9 +292,9 @@ void sendDataToDB()
     //    Serial.print("  DHCP assigned IP ");
     //    Serial.println(Ethernet.localIP());
   }
-  // Ethernet shield heeft tijd nodig voor het initialiseren 
+  // Ethernet shield heeft tijd nodig voor het initialiseren
   delay(1000);
-  
+
   //  Serial.print("connecting to ");
   //  Serial.print(server);
   //  Serial.println("...");
@@ -305,7 +322,7 @@ void sendDataToDB()
     client.println("Connection: close");
     client.println();
   } else {
-    // als er geen connectie is laat de error zien 
+    // als er geen connectie is laat de error zien
     Serial.println("connection failed");
     lcd.setCursor(0, 3);
     lcd.print("Connection failed");
@@ -315,7 +332,7 @@ void sendDataToDB()
 
 // kijkt elke 5 seconden of 1 van de sensoren niet goed werkt.
 // als 1 van die sensoren niet goed werkt gaat er een oranje lampje aan
-// als alle 3 de factoren fout zijn gaat het rode ledje aan. 
+// als alle 3 de factoren fout zijn gaat het rode ledje aan.
 void ledStatus()
 {
 
@@ -354,28 +371,59 @@ void ledStatus()
 }
 
 // als de button wordt ingedrukt switch hij schaalSwitch naar true of false
-// dit bepaald of het faherenheit of celcius is. 
+// dit bepaald of het faherenheit of celcius is.
 // in deze functie slaat hij ook wanneer de knop ingedrukt is de value op in de EEPROM
 // zodat bij startup de laatste waarde wordt gebruikt
 void ButtonPressed() {
-
-  if (schaalSwitch == true) {
-    digitalWrite(ledSchaal, HIGH);
-  } else {
-    digitalWrite(ledSchaal, LOW);
-  }
-  
   if (digitalRead(button) == HIGH) { // if button is pressed
     if (schaalSwitch == true) {           // and the status flag is LOW
       schaalSwitch = false;                // make status flag HIGH
       Serial.println("Writes 1 to EEPROm");
       EEPROM.write(1, 0);
+      digitalWrite(ledSchaal, HIGH);
     }                           //
     else {                        // otherwise...
       schaalSwitch = true;                // make status flag LOW
       Serial.println("Writes 2 to EEPROm");
       EEPROM.write(1, 1);
+      digitalWrite(ledSchaal, LOW);
     }
     delay(1000);                    // wait a sec for the
   }                               // hardware to stabilize
+}
+
+void DebugOn() {
+  serialInput = "temp";
+  if (Serial.available()) {
+    serialInput = Serial.readStringUntil('\n');
+    Serial.println(serialInput);
+    if (serialInput == "Debug activate") {
+      debugLogging = true;
+      DebugLog("Debug is activated", 2);
+    }
+  }
+
+}
+
+void DebugLog(String a_text, int a_infoType) {
+  if (debugLogging == true) {
+    switch (a_infoType) {
+      case 0:
+        a_text = "ERROR: " + a_text;
+        break;
+      case 1:
+        a_text = "Warning: " + a_text;
+        break;
+      case 2:
+        a_text = "Info: " + a_text;
+        break;
+      case 3:
+        a_text = "Alert: " + a_text;
+        break;
+      default:
+        a_text = "";
+        break;
+    }
+    Serial.println(a_text);
+  }
 }
