@@ -18,7 +18,6 @@
 //<--- Begin libraries --->
 //lucht temperatuur libary
 #include <DHT.h>
-#include <DHT_U.h>
 //Ethernet library
 #include <Ethernet.h>
 //Water temperatuur library
@@ -72,7 +71,8 @@ int waterTemp;  //hier komt de waarde uit de sensor
 
 LiquidCrystal_I2C lcd(0x3F, 20, 4); //zet het adres van de display en de grootte van het display
 
-SimpleTimer timer; //timer object
+//timer object
+SimpleTimer timer; 
 
 //<--- Begin web server --->
 //mac adres van de arduino
@@ -110,6 +110,13 @@ void loop()
 
 void initGlobals()
 {
+  //zet de schaalSwitch op de laats opgeslagen value van de EEPROM
+  schaalSwitch = EEPROM.read(1);
+  if ( schaalSwitch = true) {
+    digitalWrite(ledSchaal, HIGH);
+  } else {
+    digitalWrite(ledSchaal, LOW);
+  }
   //pin input en outputs
   pinMode(LedPinG, OUTPUT);
   pinMode(LedPinB, OUTPUT);
@@ -133,12 +140,6 @@ void initGlobals()
 
   // start de Ethernet connectie
   Ethernet.begin(mac, ip);
-
-  //zet de schaalSwitch op de laats opgeslagen value van de EEPROM
-  bool schaalSwitch = EEPROM.read(1);
-  if ( schaalSwitch = true) {
-    digitalWrite(ledSchaal, HIGH);
-  }
 }
 
 //functie voor een demo van het lcd scherm en de eerste initialisering
@@ -171,15 +172,13 @@ void lcdSetup()
 
 void MainTimer()
 {
+  schaalSwitch = EEPROM.read(1);
   ButtonPressed();
   meetLuchtTemp();
   meetWaterTemp();
   sendDataToDB();
   ledStatus();
   DebugOn();
-  Serial.println(schaalSwitch);
-  schaalSwitch = EEPROM.read(1);
-  Serial.println(schaalSwitch);
 
   if (digitalRead(ledProgress) == LOW) {
     digitalWrite(ledProgress, HIGH);
@@ -191,9 +190,15 @@ void MainTimer()
 //functie voor het meten en laten zien op de display van de lucht temperatuur
 void meetLuchtTemp()
 {
+
+  DebugLog("Lucht Sensor Read", 2);
   //lokale variabele die alleen in deze functie worden gebruikt
   float h = dht.readHumidity(); //meet de lucht luchtvochtigheid van de sensor
+//  DebugLog("luchtvochtigheid", 2);
+//  DebugLog(String(h), 2);
   float t = dht.readTemperature();//meet de temperatuur van de sensor
+//  DebugLog("temperatuur", 2);
+//  DebugLog(String(t), 2);
 
   float hic = dht.computeHeatIndex(t, h, false); //rekent met de luchtvochtigheid en temperatuur uit wat de gevoelstemperatuur is
 
@@ -234,10 +239,14 @@ void meetLuchtTemp()
 //functie voor het meten en laten zien op de display van de water temperatuur
 void meetWaterTemp()
 {
+
+//  DebugLog("MeetWater Sensor Read", 2);
   //stuurt het command om de sensor waarde te krijgen
   sensors.requestTemperatures();
   //leest de eerste sensor uit en slaat de waarde op in waterTemp
   waterTemp = sensors.getTempCByIndex(0);
+
+//  DebugLog(String(waterTemp), 2);
 
   //als de sensor tussen de minimale en maximale waarde zit dan werkt hij correct
   if (waterTemp > -55 && waterTemp < 125) {
@@ -393,7 +402,6 @@ void ButtonPressed() {
 }
 
 void DebugOn() {
-  serialInput = "temp";
   if (Serial.available()) {
     serialInput = Serial.readStringUntil('\n');
     Serial.println(serialInput);
