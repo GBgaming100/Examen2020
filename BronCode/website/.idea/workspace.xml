@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="021cb91d-7c7f-4769-9c6b-bff9c2052f5d" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution>
+      <executable />
+    </execution>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="CSS File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1XOoPWYG7hsOZkE54JWtCrZfeDR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\Thijs\inc" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="021cb91d-7c7f-4769-9c6b-bff9c2052f5d" name="Default Changelist" comment="" />
+      <created>1580926480693</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1580926480693</updated>
+      <workItem from="1580926487798" duration="1730000" />
+      <workItem from="1581418139676" duration="1340000" />
+      <workItem from="1581586902406" duration="2937000" />
+      <workItem from="1581668917380" duration="2442000" />
+      <workItem from="1582014411212" duration="1765000" />
+      <workItem from="1583182333659" duration="351000" />
+      <workItem from="1583227005105" duration="766000" />
+      <workItem from="1583396351412" duration="3151000" />
+      <workItem from="1583750533287" duration="4956000" />
+      <workItem from="1590654310504" duration="185000" />
+      <workItem from="1590654660737" duration="3089000" />
+      <workItem from="1590743770663" duration="2154000" />
+      <workItem from="1591103813961" duration="1841000" />
+      <workItem from="1591169106423" duration="8204000" />
+      <workItem from="1591259067546" duration="629000" />
+      <workItem from="1591617119444" duration="664000" />
+      <workItem from="1591703654355" duration="775000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="538" y="235" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590744064617">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="538" y="235" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.864@0.0.1536.864" timestamp="1590744064617" />
+    <state x="740" y="276" key="FileChooserDialogImpl" timestamp="1583406928174">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="276" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1583406928174" />
+    <state x="635" y="369" key="NewPhpFileDialog" timestamp="1591179723616">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="635" y="369" key="NewPhpFileDialog/0.0.1536.864@0.0.1536.864" timestamp="1591179723616" />
+    <state x="794" y="444" key="NewPhpFileDialog/0.0.1920.1040/-1680.26.1680.1010@0.0.1920.1040" timestamp="1583756422328" />
+    <state x="477" y="253" key="com.intellij.ide.util.TipDialog" timestamp="1591703664448">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="477" y="253" key="com.intellij.ide.util.TipDialog/0.0.1536.864@0.0.1536.864" timestamp="1591703664448" />
+    <state x="596" y="304" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1583227008285" />
+    <state x="567" y="72" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1591104017843">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="567" y="72" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1536.864@0.0.1536.864" timestamp="1591104017843" />
+    <state x="578" y="349" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1591179688248">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="578" y="349" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.864@0.0.1536.864" timestamp="1591179688248" />
+  </component>
+</project>
